@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atlas Shift Labs (ASL)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fbf7f1;--card:#fff;--text:#1f2a2e;--muted:#5f6c70;--accent:#c2562b;--accent-t:#fff;--teal:#0f5c63;--border:#e6dccd;--ai:#efe6d8;--hero:#0f5c63;--hero-t:#fdf6ea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a1c;--card:#1b2629;--text:#eef2f2;--muted:#a3b2b5;--accent:#e0733f;--accent-t:#1a120c;--teal:#5fc0c9;--border:#2b3a3d;--ai:#273538;--hero:#0b3c41;--hero-t:#fdf6ea}}
+:root[data-theme="dark"]{--bg:#121a1c;--card:#1b2629;--text:#eef2f2;--muted:#a3b2b5;--accent:#e0733f;--accent-t:#1a120c;--teal:#5fc0c9;--border:#2b3a3d;--ai:#273538;--hero:#0b3c41;--hero-t:#fdf6ea}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Cairo",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--border)}
+.bar{max-width:1050px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-weight:800;font-size:1.15rem;color:var(--teal)}
+.langs{display:flex;gap:4px}
+.langs button{background:transparent;border:1px solid var(--border);color:var(--text);padding:4px 12px;border-radius:999px;font:inherit;font-size:.85rem;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--teal);color:var(--bg);border-color:var(--teal)}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-t);border:0;border-radius:12px;padding:13px 28px;font:inherit;font-weight:800;font-size:1.05rem;cursor:pointer;text-decoration:none}
+.btn.alt{background:transparent;color:var(--hero-t);border:2px solid var(--hero-t);margin-inline-start:10px}
+.hero{background:var(--hero);color:var(--hero-t);background-image:radial-gradient(circle at 100% 0,rgba(255,255,255,.08) 0 120px,transparent 121px),radial-gradient(circle at 0 100%,rgba(255,255,255,.06) 0 160px,transparent 161px)}
+.hero .in{max-width:1050px;margin:0 auto;padding:72px 18px 80px}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);line-height:1.15;margin:0 0 16px;max-width:16ch;font-weight:800}
+.hero p{font-size:1.15rem;max-width:46ch;margin:0 0 28px;opacity:.92}
+section{max-width:1050px;margin:0 auto;padding:60px 18px}
+h2{font-size:clamp(1.5rem,4vw,2.1rem);margin:0 0 28px;color:var(--teal)}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px}
+.card .ic{font-size:1.8rem}
+.card h3{margin:8px 0 4px;font-size:1.1rem}
+.card p{margin:0;color:var(--muted)}
+.num{width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--accent-t);display:grid;place-items:center;font-weight:800}
+.final{text-align:center;background:var(--card);border:1px solid var(--border);border-radius:22px;margin:0 18px 40px;max-width:1014px;padding:44px 18px}
+@media(min-width:1050px){.final{margin-inline:auto}}
+.final h2{margin-bottom:20px}
+footer{text-align:center;color:var(--muted);padding:20px 18px 36px;font-size:.9rem}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;backdrop-filter:blur(3px);align-items:center;justify-content:center;z-index:20;padding:14px}
+#modal.open{opacity:1;visibility:visible}
+.box{background:var(--card);color:var(--text);border-radius:18px;width:100%;max-width:480px;max-height:92vh;display:flex;flex-direction:column;padding:16px;border:1px solid var(--border)}
+.box .top{display:flex;justify-content:space-between;align-items:center}
+.box h3{margin:0;color:var(--teal)}
+.x{background:transparent;border:0;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1}
+.note{color:var(--muted);font-size:.8rem;margin:2px 0 8px}
+#log{height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px}
+.b{max-width:85%;padding:8px 12px;border-radius:14px;white-space:pre-wrap;font-size:.95rem}
+.me{align-self:flex-end;background:var(--accent);color:var(--accent-t)}
+.ai{align-self:flex-start;background:var(--ai)}
+.row{display:flex;gap:8px;margin-top:10px}
+input{flex:1;min-width:0;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;font:inherit}
+.row .btn{padding:10px 18px;font-size:1rem}
+button:disabled{opacity:.5}
+.tag{font-size:.7rem;border:1px solid var(--teal);border-radius:6px;padding:0 6px;margin-inline-start:6px;vertical-align:middle}
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes bub{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.hero .in>*{animation:up .9s cubic-bezier(.22,1,.36,1) backwards}
+.hero .in>:nth-child(2){animation-delay:.12s}
+.hero .in>:nth-child(3){animation-delay:.24s}
+.hero .in>:nth-child(4){animation-delay:.32s}
+.reveal{opacity:0}
+.reveal.in{opacity:1;animation:up .85s cubic-bezier(.22,1,.36,1) backwards;animation-delay:var(--d,0s)}
+.card{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,border-color .35s ease}
+.card:hover{transform:translateY(-5px);box-shadow:0 14px 30px rgba(0,0,0,.12);border-color:var(--teal)}
+.btn{transition:transform .25s ease,box-shadow .25s ease,filter .25s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.2);filter:brightness(1.06)}
+.btn:active{transform:none}
+.langs button{transition:background .25s ease,color .25s ease,border-color .25s ease}
+.box{transform:translateY(22px) scale(.97);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+#modal.open .box{transform:none}
+.b{animation:bub .35s cubic-bezier(.22,1,.36,1)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="logo">Atlas Shift Labs <span class="tag">ASL</span></div>
+  <div class="langs">
+    <button data-l="en" aria-pressed="true">EN</button>
+    <button data-l="fr" aria-pressed="false">FR</button>
+    <button data-l="es" aria-pressed="false">ES</button>
+    <button data-l="ar" aria-pressed="false">العربية</button>
+  </div>
+</div></header>
+
+<div class="hero"><div class="in">
+  <h1 data-t="hero_t"></h1>
+  <p data-t="hero_s"></p>
+  <button class="btn open" data-t="cta"></button>
+  <a class="btn alt" href="#benefits" data-t="more"></a>
+</div></div>
+
+<section id="benefits">
+  <h2 data-t="ben_h"></h2>
+  <div class="grid" id="bgrid"></div>
+</section>
+
+<section>
+  <h2 data-t="how_h"></h2>
+  <div class="grid" id="sgrid"></div>
+</section>
+
+<div class="final">
+  <h2 data-t="final_h"></h2>
+  <button class="btn open" data-t="cta"></button>
+</div>
+<footer>© <span id="yr"></span> Atlas Shift Labs (ASL)</footer>
+
+<div id="modal" role="dialog" aria-modal="true"><div class="box">
+  <div class="top"><h3 data-t="chat_t"></h3><button class="x" id="close" aria-label="Close">×</button></div>
+  <div class="note" data-t="chat_note"></div>
+  <div id="log"></div>
+  <div class="row"><input id="msg" autocomplete="off"><button class="btn" id="send" data-t="send"></button></div>
+</div></div>
+
+<script>
+const T = {
+en:{hero_t:"Never miss a customer message again.",hero_s:"An AI assistant that answers your customers on WhatsApp and Instagram, in their language, day and night.",cta:"Test the agent",more:"See the benefits",ben_h:"Why an AI agent?",
+b1t:"Instant replies, 24/7",b1d:"Answers in seconds, even at 3 am, so no booking is lost.",
+b2t:"Speaks every language",b2d:"Arabic, Darija, French, English and more, automatically.",
+b3t:"Knows your business",b3d:"Prices, hours, rooms, policies: it only says what you teach it.",
+b4t:"Saves you hours",b4d:"No more repeating the same answers all day. Focus on your guests.",
+b5t:"Collects booking requests",b5d:"Takes dates, guests and name, then hands them to you ready to confirm.",
+b6t:"Always polite and consistent",b6d:"The same friendly tone every time. Never tired, never rude.",
+how_h:"How it works",s1t:"We learn your business",s1d:"Rooms, prices, hours, rules: you tell us once.",s2t:"We connect your channels",s2d:"WhatsApp and Instagram, using your own accounts.",s3t:"Your agent goes live",s3d:"It replies to customers, you stay in control and get every booking request.",
+final_h:"See it in action in 30 seconds",chat_t:"Test the agent",chat_note:"Demo with a fictional riad. Write as a customer, in any language.",ph:"Type your message…",send:"Send",
+greet:"Welcome! 👋 How can I help you with your stay?",na:"The AI isn’t available in this view right now. Please try again from a logged-in browser.",err:"Something went wrong. Please try again."},
+fr:{hero_t:"Ne manquez plus jamais un message client.",hero_s:"Un assistant IA qui répond à vos clients sur WhatsApp et Instagram, dans leur langue, jour et nuit.",cta:"Tester l’agent",more:"Voir les avantages",ben_h:"Pourquoi un agent IA ?",
+b1t:"Réponses instantanées, 24 h/24",b1d:"Il répond en quelques secondes, même à 3 h du matin : plus aucune réservation perdue.",
+b2t:"Parle toutes les langues",b2d:"Arabe, darija, français, anglais et plus encore, automatiquement.",
+b3t:"Connaît votre activité",b3d:"Tarifs, horaires, chambres, règles : il ne dit que ce que vous lui apprenez.",
+b4t:"Vous fait gagner des heures",b4d:"Fini les mêmes réponses répétées toute la journée. Concentrez-vous sur vos clients.",
+b5t:"Recueille les demandes de réservation",b5d:"Il note les dates, le nombre de personnes et le nom, puis vous transmet tout, prêt à confirmer.",
+b6t:"Toujours poli et cohérent",b6d:"Le même ton aimable à chaque fois. Jamais fatigué, jamais désagréable.",
+how_h:"Comment ça marche",s1t:"Nous découvrons votre activité",s1d:"Chambres, tarifs, horaires, règles : vous nous le dites une fois.",s2t:"Nous connectons vos canaux",s2d:"WhatsApp et Instagram, avec vos propres comptes.",s3t:"Votre agent est en ligne",s3d:"Il répond aux clients, vous gardez le contrôle et recevez chaque demande de réservation.",
+final_h:"Voyez-le en action en 30 secondes",chat_t:"Tester l’agent",chat_note:"Démo avec un riad fictif. Écrivez comme un client, dans n’importe quelle langue.",ph:"Écrivez votre message…",send:"Envoyer",
+greet:"Bienvenue ! 👋 Comment puis-je vous aider pour votre séjour ?",na:"L’IA n’est pas disponible dans cet affichage. Réessayez depuis un navigateur connecté.",err:"Une erreur est survenue. Veuillez réessayer."},
+es:{hero_t:"No pierdas nunca más un mensaje de un cliente.",hero_s:"Un asistente de IA que responde a tus clientes en WhatsApp e Instagram, en su idioma, de día y de noche.",cta:"Probar el agente",more:"Ver las ventajas",ben_h:"¿Por qué un agente de IA?",
+b1t:"Respuestas instantáneas, 24/7",b1d:"Responde en segundos, incluso a las 3 de la madrugada, así no se pierde ninguna reserva.",
+b2t:"Habla todos los idiomas",b2d:"Árabe, darija, francés, inglés y más, de forma automática.",
+b3t:"Conoce tu negocio",b3d:"Precios, horarios, habitaciones, políticas: solo dice lo que tú le enseñas.",
+b4t:"Te ahorra horas",b4d:"Se acabó repetir las mismas respuestas todo el día. Concéntrate en tus huéspedes.",
+b5t:"Recoge solicitudes de reserva",b5d:"Anota fechas, número de personas y nombre, y te lo pasa todo listo para confirmar.",
+b6t:"Siempre amable y coherente",b6d:"El mismo trato cordial cada vez. Nunca cansado, nunca grosero.",
+how_h:"Cómo funciona",s1t:"Conocemos tu negocio",s1d:"Habitaciones, precios, horarios, normas: nos lo cuentas una sola vez.",s2t:"Conectamos tus canales",s2d:"WhatsApp e Instagram, con tus propias cuentas.",s3t:"Tu agente se pone en marcha",s3d:"Responde a los clientes, tú mantienes el control y recibes cada solicitud de reserva.",
+final_h:"Velo en acción en 30 segundos",chat_t:"Probar el agente",chat_note:"Demostración con un riad ficticio. Escribe como cliente, en cualquier idioma.",ph:"Escribe tu mensaje…",send:"Enviar",
+greet:"¡Bienvenido! 👋 ¿Cómo puedo ayudarte con tu estancia?",na:"La IA no está disponible en esta vista ahora mismo. Inténtalo desde un navegador con sesión iniciada.",err:"Algo salió mal. Inténtalo de nuevo."},
+ar:{hero_t:"لا تفوّت أي رسالة من عميل بعد اليوم.",hero_s:"مساعد ذكي يردّ على عملائك في واتساب وإنستغرام بلغتهم، ليلًا ونهارًا.",cta:"جرّب الوكيل",more:"اكتشف المزايا",ben_h:"لماذا الوكيل الذكي؟",
+b1t:"ردود فورية على مدار الساعة",b1d:"يجيب في ثوانٍ، حتى في الثالثة صباحًا، فلا يضيع أي حجز.",
+b2t:"يتحدث كل اللغات",b2d:"العربية والدارجة والفرنسية والإنجليزية وغيرها، تلقائيًا.",
+b3t:"يعرف نشاطك جيدًا",b3d:"الأسعار والمواعيد والغرف والسياسات: لا يقول إلا ما تعلّمه إياه.",
+b4t:"يوفّر لك ساعات",b4d:"لا حاجة لتكرار نفس الأجوبة طوال اليوم. ركّز على ضيوفك.",
+b5t:"يجمع طلبات الحجز",b5d:"يأخذ التواريخ وعدد الأشخاص والاسم، ثم يسلّمها لك جاهزة للتأكيد.",
+b6t:"لبق ومنتظم دائمًا",b6d:"نفس الأسلوب الودّي في كل مرة. لا يتعب ولا يسيء الرد.",
+how_h:"كيف يعمل؟",s1t:"نتعرّف على نشاطك",s1d:"الغرف والأسعار والمواعيد والقواعد: تخبرنا بها مرة واحدة.",s2t:"نربط قنواتك",s2d:"واتساب وإنستغرام، عبر حساباتك أنت.",s3t:"يبدأ وكيلك العمل",s3d:"يردّ على العملاء وتبقى أنت المتحكم، وتصلك كل طلبات الحجز.",
+final_h:"شاهده يعمل في 30 ثانية",chat_t:"جرّب الوكيل",chat_note:"تجربة مع رياض وهمي. اكتب كأنك عميل، بأي لغة.",ph:"اكتب رسالتك…",send:"إرسال",
+greet:"مرحبًا بك! 👋 كيف يمكنني مساعدتك في إقامتك؟",na:"الذكاء الاصطناعي غير متاح في هذا العرض حاليًا. جرّب من متصفح مسجّل الدخول.",err:"حدث خطأ. حاول مرة أخرى."}
+};
+const ICONS=["⚡","🌍","📖","⏱️","📅","🤝"];
+let lang="en", history=[], sample=null;
+const $=s=>document.querySelector(s), log=$("#log"), msg=$("#msg"), sendBtn=$("#send");
+
+function render(){
+  const t=T[lang];
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t[e.dataset.t]);
+  msg.placeholder=t.ph;
+  $("#bgrid").innerHTML=[1,2,3,4,5,6].map(i=>`<div class="card" style="--d:${(i-1)*.08}s"><div class="ic">${ICONS[i-1]}</div><h3>${t["b"+i+"t"]}</h3><p>${t["b"+i+"d"]}</p></div>`).join("");
+  $("#sgrid").innerHTML=[1,2,3].map(i=>`<div class="card" style="--d:${(i-1)*.1}s"><div class="num">${i}</div><h3>${t["s"+i+"t"]}</h3><p>${t["s"+i+"d"]}</p></div>`).join("");
+  document.querySelectorAll(".langs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.l===lang));
+  if(!history.length){log.innerHTML="";add("ai",t.greet);}
+  observe();
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.12});
+function observe(){document.querySelectorAll("h2,.card,.final").forEach(el=>{if(el.classList.contains("reveal"))return;el.classList.add("reveal");io.observe(el);});}
+document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>{
+  if(b.dataset.l===lang)return;
+  lang=b.dataset.l;render();
+  document.querySelectorAll("[data-t]").forEach(e=>e.animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],{duration:420,easing:"ease-out"}));
+});
+$("#yr").textContent=new Date().getFullYear();
+
+function add(role,text){const d=document.createElement("div");d.className="b "+role;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight;return d;}
+const INFO=`Riad Yasmine, Marrakech medina, 5 min walk from Jemaa el-Fnaa.
+Rooms: Standard Double 700 MAD/night (2 guests); Suite Andalouse 1,100 MAD/night (up to 3 guests, terrace view); Family Room 1,400 MAD/night (up to 4 guests). Breakfast included in Double and Suite.
+Check-in from 2 pm, check-out until 12 pm. Airport transfer 250 MAD one way. Rooftop terrace, hammam 200 MAD/person, dinner on request 180 MAD/person, free Wi-Fi.
+Free cancellation up to 7 days before arrival. 30% deposit to confirm. No smoking in rooms. Children welcome.
+Languages: Arabic, French, English, Spanish. Owner: Hassan.`;
+
+function prompt(){
+  const tr=history.map(m=>(m.role==="me"?"Customer: ":"Assistant: ")+m.text).join("\n");
+  return `You are the WhatsApp assistant of a riad. Today is ${new Date().toDateString()}. Answer using ONLY the info below.
+Rules: reply in the customer’s language (Arabic, Darija, French, English, Spanish...). Be warm and short (2-5 sentences), no markdown. Never invent prices, availability or policies. You cannot check live availability: collect dates, number of guests and name, and say the owner will confirm shortly. If something is not in the info, say you will ask the owner.
+
+INFO:
+${INFO}
+
+CONVERSATION:
+${tr}
+
+Write only the assistant’s next reply.`;
+}
+
+async function send(){
+  const text=msg.value.trim(); if(!text)return;
+  msg.value=""; add("me",text); history.push({role:"me",text});
+  if(!sample){try{sample=await window.claude.use("sample");}catch(e){sample=null;}}
+  if(!sample){add("ai",T[lang].na);return;}
+  sendBtn.disabled=true;
+  const bub=add("ai","…");
+  try{
+    const r=await sample(prompt(),{cache:false,modelTier:"quick",onText:({text})=>{bub.textContent=text;log.scrollTop=log.scrollHeight;}});
+    bub.textContent=r.text; history.push({role:"ai",text:r.text});
+  }catch(e){bub.textContent=T[lang].err;}
+  sendBtn.disabled=false; msg.focus();
+}
+sendBtn.onclick=send;
+msg.addEventListener("keydown",e=>{if(e.key==="Enter")send();});
+
+const modal=$("#modal");
+document.querySelectorAll(".open").forEach(b=>b.onclick=()=>{modal.classList.add("open");setTimeout(()=>msg.focus(),50);});
+function closeM(){modal.classList.remove("open");}
+$("#close").onclick=closeM;
+modal.addEventListener("click",e=>{if(e.target===modal)closeM();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM();});
+render();
+</script>
+</body>
+</html>
